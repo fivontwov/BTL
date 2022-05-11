@@ -1,0 +1,231 @@
+# depslib dependency file v1.0
+1651419414 source:e:\bình\codeblock\btl\main.cpp
+	"Game.h"
+
+1651418191 e:\bình\codeblock\btl\game.h
+
+1650338631 e:\bình\codeblock\btl\params.h
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_mixer.h>
+	<SDL_ttf.h>
+	<iostream>
+	<fstream>
+	<sstream>
+	<string>
+	<vector>
+	<ctime>
+
+1652256492 e:\bình\codeblock\btl\game_utils.h
+	"Game_Base.h"
+	"Button.h"
+
+1646718892 e:\bình\codeblock\btl\button.h
+	"Game_Base.h"
+	"LTexture.h"
+
+1646718892 e:\bình\codeblock\btl\ltexture.h
+	"Game_Base.h"
+
+1652258718 source:e:\bình\codeblock\btl\game_utils.cpp
+	"Game_Utils.h"
+	"CollisionManager.h"
+	"Player.h"
+	"Object.h"
+	"Game.h"
+	"Background.h"
+	"TextManager.h"
+
+1652258078 e:\bình\codeblock\btl\game_base.h
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_mixer.h>
+	<SDL_ttf.h>
+	<iostream>
+	<fstream>
+	<sstream>
+	<string>
+	<vector>
+	<ctime>
+
+1646718892 e:\bình\codeblock\btl\enemy.h
+	"LTexture.h"
+
+1646718892 e:\bình\codeblock\btl\character.h
+	"LTexture.h"
+
+1646718892 source:e:\bình\codeblock\btl\button.cpp
+	"Button.h"
+
+1646718892 source:e:\bình\codeblock\btl\character.cpp
+	"Character.h"
+	"Enemy.h"
+
+1646718892 source:e:\bình\codeblock\btl\enemy.cpp
+	"Enemy.h"
+	<vector>
+
+1652259348 source:e:\bình\codeblock\btl\game.cpp
+	"Game.h"
+	"Game_Base.h"
+	"Game_Utils.h"
+	"LTexture.h"
+	"Button.h"
+	"Player.h"
+	"Object.h"
+	"Background.h"
+	"TextManager.h"
+	"TextureManager.h"
+	"CollisionManager.h"
+	<vector>
+
+1646718892 source:e:\bình\codeblock\btl\game_base.cpp
+	"Game_Base.h"
+
+1652204573 source:e:\bình\codeblock\btl\ltexture.cpp
+	"LTexture.h"
+
+1652259085 source:e:\bình\codeblock\btl\background.cpp
+	"Background.h"
+	<cstdlib>
+
+1652259050 e:\bình\codeblock\btl\background.h
+	"Object.h"
+
+1652194369 e:\bình\codeblock\btl\object.h
+	"Game_Base.h"
+
+1650012977 e:\bình\codeblock\btl\texturemanager.h
+	<SDL.h>
+	<SDL_image.h>
+
+1650012977 source:e:\bình\codeblock\btl\collisionmanager.cpp
+	"CollisionManager.h"
+
+1650012977 e:\bình\codeblock\btl\collisionmanager.h
+	<SDL.h>
+	<SDL_image.h>
+
+1652194104 source:e:\bình\codeblock\btl\object.cpp
+	"Object.h"
+
+1652197369 source:e:\bình\codeblock\btl\player.cpp
+	"Player.h"
+	<iostream>
+
+1652190222 e:\bình\codeblock\btl\player.h
+	"Object.h"
+
+1652015270 source:e:\bình\codeblock\btl\textmanager.cpp
+	"TextManager.h"
+
+1652015270 e:\bình\codeblock\btl\textmanager.h
+	<SDL_ttf.h>
+	<string>
+	<iostream>
+
+1650012977 source:e:\bình\codeblock\btl\texturemanager.cpp
+	"TextureManager.h"
+
+1652209071 source:e:\bình\codeblock\btl - copy\background.cpp
+	"Background.h"
+	<cstdlib>
+
+1652209071 e:\bình\codeblock\btl - copy\background.h
+	"Object.h"
+
+1652194369 e:\bình\codeblock\btl - copy\object.h
+	"Game_Base.h"
+
+1650012977 e:\bình\codeblock\btl - copy\texturemanager.h
+	<SDL.h>
+	<SDL_image.h>
+
+1646718892 source:e:\bình\codeblock\btl - copy\button.cpp
+	"Button.h"
+
+1646718892 e:\bình\codeblock\btl - copy\button.h
+	"Game_Base.h"
+	"LTexture.h"
+
+1652209632 e:\bình\codeblock\btl - copy\game_base.h
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_mixer.h>
+	<SDL_ttf.h>
+	<iostream>
+	<fstream>
+	<sstream>
+	<string>
+	<vector>
+	<ctime>
+
+1646718892 e:\bình\codeblock\btl - copy\ltexture.h
+	"Game_Base.h"
+
+1650012977 source:e:\bình\codeblock\btl - copy\collisionmanager.cpp
+	"CollisionManager.h"
+
+1650012977 e:\bình\codeblock\btl - copy\collisionmanager.h
+	<SDL.h>
+	<SDL_image.h>
+
+1646718892 source:e:\bình\codeblock\btl - copy\game_base.cpp
+	"Game_Base.h"
+
+1652209632 source:e:\bình\codeblock\btl - copy\game_utils.cpp
+	"Game_Utils.h"
+	"CollisionManager.h"
+	"Player.h"
+	"Object.h"
+	"Game.h"
+	"Background.h"
+	"TextManager.h"
+
+1652198538 e:\bình\codeblock\btl - copy\game_utils.h
+	"Game_Base.h"
+	"Button.h"
+
+1652190222 e:\bình\codeblock\btl - copy\player.h
+	"Object.h"
+
+1651418191 e:\bình\codeblock\btl - copy\game.h
+
+1652015270 e:\bình\codeblock\btl - copy\textmanager.h
+	<SDL_ttf.h>
+	<string>
+	<iostream>
+
+1652204573 source:e:\bình\codeblock\btl - copy\ltexture.cpp
+	"LTexture.h"
+
+1651419414 source:e:\bình\codeblock\btl - copy\main.cpp
+	"Game.h"
+
+1652194104 source:e:\bình\codeblock\btl - copy\object.cpp
+	"Object.h"
+
+1652015270 source:e:\bình\codeblock\btl - copy\textmanager.cpp
+	"TextManager.h"
+
+1650012977 source:e:\bình\codeblock\btl - copy\texturemanager.cpp
+	"TextureManager.h"
+
+1652197369 source:e:\bình\codeblock\btl - copy\player.cpp
+	"Player.h"
+	<iostream>
+
+1652227992 source:e:\bình\codeblock\btl - copy\game.cpp
+	"Game.h"
+	"Game_Base.h"
+	"Game_Utils.h"
+	"LTexture.h"
+	"Button.h"
+	"Player.h"
+	"Object.h"
+	"Background.h"
+	"TextManager.h"
+	"TextureManager.h"
+	"CollisionManager.h"
+	<vector>
+
