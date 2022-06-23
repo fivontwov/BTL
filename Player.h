@@ -15,12 +15,13 @@ private:
     double jumpTimer;
     double lastJump = 0;
 public:
-    void Gravity();
+    void Gravity(int resize);
     void GetJumpTime();
     void Reset();
     int getYpos();
-    void Jump();
+    void Jump(int resize);
     bool JumpState();
-    void Render(SDL_Renderer* ren,SDL_Rect*gCharacterClips);
+    void Render(SDL_Renderer* ren,SDL_Rect*currentClip);
+    void RenderLight(SDL_Renderer* ren,SDL_Rect*currentClip);
 };
 #endif

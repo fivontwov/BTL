@@ -33,13 +33,15 @@ const int COMMON_BUTTON_WIDTH = 150;
 const int COMMON_BUTTON_HEIGHT = 98;
 const int SMALL_BUTTON_WIDTH = 57;
 const int SMALL_BUTTON_HEIGHT = 57;
+const int CHARACTER_WIDTH = 80;
+const int CHARACTER_HEIGHT = 70;
 
 const int PLAY_BUTON_POSX = 560;
 const int PLAY_BUTTON_POSY= 205;
 const int EXIT_BUTTON_POSX = 560;
 const int EXIT_BUTTON_POSY = 415;
-const int HELP_BUTTON_POSX = 389;
-const int HELP_BUTTON_POSY = 293;
+const int HELP_BUTTON_POSX = 560;
+const int HELP_BUTTON_POSY = 310;
 const int BACK_BUTTON_POSX = 31;
 const int BACK_BUTTON_POSY = 29;
 
@@ -53,8 +55,10 @@ const double LAYER_7_SPEED = 1.5;
 const double LAYER_8_SPEED = 1.75;
 const double LAYER_9_SPEED = 2.0;
 
-const int FLYING_FRAMES = 14;
+const int FLYING_FRAMES = 15;
 const int BACKGROUND_LAYER = 9;
+const int TOTAL_FOOD = 5;
+const int BOOM_FRAME = 4;
 
 enum ButtonSprite
 {

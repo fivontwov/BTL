@@ -1,22 +1,8 @@
 #include "Background.h"
 #include<cstdlib>
 
+
 void Background::Render(SDL_Renderer* ren)
-{
-	SDL_RenderCopy(ren, getTexture(), NULL, NULL);
-}
-
-void Background::LeaderboardRender(SDL_Renderer* ren)
-{
-	SDL_RenderCopy(ren, getTexture(), getSrc(), getDest());
-}
-
-void Background::GroundRender(SDL_Renderer* ren)
-{
-	SDL_RenderCopy(ren, getTexture(), getSrc(), getDest());
-}
-
-void Background::PipeRender(SDL_Renderer* ren)
 {
 	SDL_RenderCopy(ren, getTexture(), getSrc(), getDest());
 }
@@ -176,4 +162,35 @@ void Background::Reset()
 	incY2 = 0;
 	incY3 = 0;
 }
+int boom_Y=-100;
+bool Background::Update_Boom (int randX,int frame){
+    if (BoomDistance<=-100 || boom_Y>=650){
+        BoomDistance=randX;
+        boom_Y=-100;
+        return true;
+    }
+    boom_Y++;
+	BoomDistance--;
+    setSrc(0, 0, 160, 580);
+	setDest(BoomDistance,boom_Y, 40, 250);
+	return false;
+    return true;
+}
 
+bool Background::Fruit_Update(int incY,int &points,int frame,int type){
+    if (FruitDistance1<=-100){
+        FruitDistance1+=900;
+        this->incY_F = incY;
+        return true;
+    }
+
+	FruitDistance1--;
+    setSrc(type*100, 0, 100, 100);
+	setDest(FruitDistance1,200- incY_F-frame, 50, 50);
+	return false;
+
+}
+
+void Background::RenderFruit(SDL_Renderer* ren,SDL_Rect* currentClip){
+    SDL_RenderCopy(ren, getTexture(), currentClip, getDest());
+}

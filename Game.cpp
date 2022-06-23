@@ -7,7 +7,6 @@
 #include "Object.h"
 #include "Background.h"
 #include "TextManager.h"
-#include "TextureManager.h"
 #include "CollisionManager.h"
 #include <vector>
 using namespace std;
@@ -18,6 +17,7 @@ TTF_Font* gFont = nullptr;
 Mix_Music* gMusic = nullptr;
 Mix_Music* gMenuMusic = nullptr;
 Mix_Chunk* gClick = nullptr;
+Mix_Chunk* gEat = nullptr;
 Mix_Chunk* gJump = nullptr;
 Mix_Chunk* gLose = nullptr;
 const std::string SCENCE1[BACKGROUND_LAYER] = {
@@ -38,23 +38,33 @@ Background Pipe_Above2;
 Background Pipe_Below2;
 Background Pipe_Above3;
 Background Pipe_Below3;
+Background Fruit;
+SDL_Rect gFruitClips[TOTAL_FOOD];
+SDL_Rect gBoomClips[BOOM_FRAME];
+Background Boom;
 TextManager score;
-TextManager gen;
+TextManager death;
 TextManager gameover;
 TextManager press;
 TextManager high;
+TextManager timer[3];
+int frame_Type[3]={0};
 int points = 0;
 int deathcount = 0;
-int nextCheckPoint = 0;
 int best=0;
 int highscore;
 int variance1 = rand() % 201 - 100;
 int variance2 = rand() % 201 - 100;
 int variance3 = rand() % 201 - 100;
+int variance4 = rand() % 201 - 100;
+int variance5 = rand() % 522;
+int type=(variance1+100) % TOTAL_FOOD;
 bool Die = false;
+bool boom=false;
 int frame_Character = 0;
 int frame_Pipe=0;
 int OffsetSpeed_Ground = BASE_OFFSET_SPEED;
+int last=1;
 std::vector <double> OffsetSpeed_Bkgr(BACKGROUND_LAYER, BASE_OFFSET_SPEED);
 
 SDL_Rect gPlayButton[BUTTON_TOTAL];
@@ -73,9 +83,8 @@ LTexture gBackButtonTexture;
 LTexture gSoundButtonTexture;
 LTexture gInfoButtonTexture;
 Button PlayButton(PLAY_BUTON_POSX, PLAY_BUTTON_POSY);
-Button HelpButton(HELP_BUTTON_POSX, HELP_BUTTON_POSY);
 Button SoundButton(700, 12);
-Button InfoButton(560, 310);
+Button InfoButton(HELP_BUTTON_POSX, HELP_BUTTON_POSY);
 Button ExitButton(EXIT_BUTTON_POSX, EXIT_BUTTON_POSY);
 Button BackButton(BACK_BUTTON_POSX, BACK_BUTTON_POSY);
 
@@ -144,6 +153,7 @@ void Game::HandleEvents() {
 	bool Quit_Menu = false;
 	bool Play_Again = false;
 	Mix_PlayMusic(gMenuMusic, IS_REPEATITIVE);
+	bool collist=true;
 	while (!Quit_Menu)
 	{
 		SDL_Event e_mouse;
@@ -174,9 +184,9 @@ void Game::HandleEvents() {
 		ExitButton.Render(currentClip_Exit, gRenderer, gExitButtonTexture);
 		SDL_RenderPresent(gRenderer);
 	}
-
     int highscore=0,best=0;
-
+    type=rand()%5;
+    int resize=0;
 	while (Play_Again)
 	{
         if (soundOn) Mix_PlayMusic(gMusic, IS_REPEATITIVE);
@@ -186,6 +196,7 @@ void Game::HandleEvents() {
 		bool GameState = true;
 		while (!Quit)
 		{
+		    if (Fruit.FruitDistance1<=-100 ) type=(variance1+100)%5;
 			if (GameState)
 			{
 			    p.GetJumpTime();
@@ -204,18 +215,18 @@ void Game::HandleEvents() {
                         {
                             if (!p.JumpState())
                             {
-                                p.Jump();
-                                //Mix_PlayChannel(MIX_CHANNEL,gJump,NOT_REPEATITIVE);
+                                p.Jump(resize);
+                                if (soundOn) Mix_PlayChannel(MIX_CHANNEL,gJump,NOT_REPEATITIVE);
                             }
                             else
                             {
-                                p.Gravity();
+                                p.Gravity(resize);
                             }
                         }
                     }
                     else
                     {
-                        p.Gravity();
+                        p.Gravity(resize);
                     }
 
                 SDL_RWops *file = SDL_RWFromFile("highscore.txt", "r+");
@@ -224,7 +235,6 @@ void Game::HandleEvents() {
                     SDL_RWread(file, &highscore, sizeof(int), 1);
                     SDL_RWclose(file);
                 }
-
                // Scoring Mechanics
                 std::string s;
                 s = std::to_string(points);
@@ -246,51 +256,59 @@ void Game::HandleEvents() {
                                         // Generation Mechanics
                     std::string s2;
                     s2 = "Death: " + std::to_string(deathcount);
-                    gen.Text(s2, 255, 255, 255, gRenderer);
+                    death.Text(s2, 255, 255, 255, gRenderer);
                     std::string s5;
                     s5 = "High score: " + std::to_string(best);
                     high.Text(s5, 255, 255, 255, gRenderer);
-
-                    bool flag1 = false, flag2 = false;
+                    bool flag1 = false, flag2 = false, flag3=false, flag4=false,flag5=false;
                     flag1 = Pipe_Above1.Pipe_Above1Update(variance1, points,frame_Pipe);
-                    flag2 = Pipe_Below1.Pipe_Below1Update(variance1,frame_Pipe);
-                    if (flag1 && flag2)
+                    flag1 = Pipe_Below1.Pipe_Below1Update(variance1,frame_Pipe);
+                    flag4 = Fruit.Fruit_Update(variance4,points,frame_Pipe,type);
+                    flag5 = Boom.Update_Boom (variance5,frame_Pipe);
+                    if (flag1)
                     {
                         srand(SDL_GetTicks());
                         variance1 = rand() % 201 - 100;
-                        Pipe_Above1.Pipe_Above1Update(variance1, points,frame_Pipe);
-                        Pipe_Below1.Pipe_Below1Update(variance1,frame_Pipe);
+                        //last=1;
                     }
-
-                    flag1 = Pipe_Above2.Pipe_Above2Update(variance2, points);
+                    if (flag4) variance4=variance3;
+                    if (flag5) variance5 = rand() % 800;
+                    flag2 = Pipe_Above2.Pipe_Above2Update(variance2, points);
                     flag2 = Pipe_Below2.Pipe_Below2Update(variance2);
-                    if (flag1 && flag2)
+
+                    if (flag2)
                     {
                         srand(SDL_GetTicks());
                         variance2 = rand() % 201 - 100;
-                        Pipe_Above2.Pipe_Above2Update(variance2, points);
-                        Pipe_Below2.Pipe_Below2Update(variance2);
+                        //last=2;
                     }
 
-                    flag1 = Pipe_Above3.Pipe_Above3Update(variance3, points,frame_Pipe);
-                    flag1 = Pipe_Below3.Pipe_Below3Update(variance3,frame_Pipe);
-                    if (flag1 && flag2)
+                    flag3 = Pipe_Above3.Pipe_Above3Update(variance3, points,frame_Pipe);
+                    flag3 = Pipe_Below3.Pipe_Below3Update(variance3,frame_Pipe);
+                    if (flag3)
                     {
                         srand(SDL_GetTicks());
                         variance3 = rand() % 201 - 100;
-                        Pipe_Above3.Pipe_Above3Update(variance3, points,frame_Pipe);
-                        Pipe_Below3.Pipe_Below3Update(variance3,frame_Pipe);
+                        //last=3;
                     }
-
-
+                    if (Pipe_Above1.getPipe1X()>=800) last=1;
+                    else if (Pipe_Above2.getPipe2X()>=800) last=2;
+                    else if (Pipe_Above3.getPipe3X()>=800) last=3;
                     ControlFramePipe(frame_Pipe);
                     ControlFrame(frame_Character);
+
                     //CollisionDetection();
-                        if (CollisionManager::CheckCollision(p.getDest(), Pipe_Above1.getDest()) || CollisionManager::CheckCollision(p.getDest(), Pipe_Below1.getDest()) ||
-                            CollisionManager::CheckCollision(p.getDest(), Pipe_Above2.getDest()) || CollisionManager::CheckCollision(p.getDest(), Pipe_Below2.getDest()) ||
-                            CollisionManager::CheckCollision(p.getDest(), Pipe_Above3.getDest()) || CollisionManager::CheckCollision(p.getDest(), Pipe_Below3.getDest()) ||
-                            p.getYpos()>SCREEN_HEIGHT -50 || p.getYpos() < 0)
-                        {
+                    SDL_Rect x=*Boom.getDest();
+                    x.w=50;
+                    if (CollisionManager::CheckCollision(p.getDest(), Pipe_Above1.getDest()) || CollisionManager::CheckCollision(p.getDest(), Pipe_Below1.getDest()) ||
+                    CollisionManager::CheckCollision(p.getDest(), Pipe_Above2.getDest()) || CollisionManager::CheckCollision(p.getDest(), Pipe_Below2.getDest()) ||
+                    CollisionManager::CheckCollision(p.getDest(), Pipe_Above3.getDest()) || CollisionManager::CheckCollision(p.getDest(), Pipe_Below3.getDest()) ||
+                    (type==3 && CollisionManager::CheckCollision(p.getDest(), Fruit.getDest())) || p.getYpos()>SCREEN_HEIGHT -50 || p.getYpos() < 0 ||
+                    CollisionManager::CheckCollision(p.getDest(),&x)  )
+                    {
+                        if (collist || p.getYpos()>SCREEN_HEIGHT -50 || p.getYpos() < 0 ||
+                            CollisionManager::CheckCollision(p.getDest(),&x) )
+                      {
                             Die = true;
                             std::string s3,s4;
                             s3 = "Game Over";
@@ -309,15 +327,24 @@ void Game::HandleEvents() {
                                 variance1 = rand() % 201 - 100;
                                 variance2 = rand() % 201 - 100;
                                 variance3 = rand() % 201 - 100;
+                                variance5 = rand() % 800;
+                                //type=rand()%5;
+                                resize=0;
+                                collist=true;
+                                frame_Type[2]=0;
+                                frame_Type[1]=0;
+                                frame_Type[0]=0;
                                 p.Reset();
                                 Pipe_Above1.Reset();
-                                Pipe_Above2.Reset();
-                                Pipe_Above3.Reset();
                                 Pipe_Below1.Reset();
+                                Fruit.Reset();
+                                Pipe_Above2.Reset();
                                 Pipe_Below2.Reset();
+                                Pipe_Above3.Reset();
                                 Pipe_Below3.Reset();
+                                Fruit.FruitDistance1=Pipe_Above2.getPipe2X()+200;
+                                Boom.BoomDistance=900;
                             }
-
                             //waitUntilKeyPressed
                             SDL_Event event1;
                             while (true) {
@@ -326,13 +353,49 @@ void Game::HandleEvents() {
                                     if (soundOn) Mix_PlayMusic(gMusic, IS_REPEATITIVE);
                                     break;
                                 }
-                            SDL_Delay(100);
+                            SDL_Delay(1000);
                             }
 
                         }
+                        }
+                        if(CollisionManager::CheckCollision(p.getDest(),Fruit.getDest())){
+                                if (type!=3) Mix_PlayChannel(MIX_CHANNEL,gEat,NOT_REPEATITIVE);
 
-                    Render();
+                                if(type==4 )  points+=5;
+                                else if(type==2) {
+                                    collist=false;
+                                    frame_Type[type]=0;
+                                }
+                                else if(type==1 ) {resize=-30; frame_Type[1]=0;}
+                                else if(type==0) {resize=+10; frame_Type[0]=0;}
+                                if (last==1) Fruit.FruitDistance1=Pipe_Above1.getPipe1X()+200;
+                                    else if(last==2) Fruit.FruitDistance1=Pipe_Above2.getPipe2X()+200;
+                                    else if(last ==3 ) Fruit.FruitDistance1=Pipe_Above3.getPipe3X()+200;
+                                    else if(last==0) Fruit.FruitDistance1=Pipe_Above3.getPipe3X()+200;
+                                    if (Fruit.FruitDistance1<800) Fruit.FruitDistance1+=300;
+                                    Render();
+                                    type=rand()%5;
+                        } else Render();
+                        if (!collist) {
+                            frame_Type[2]++;
+                            timer[2].Text(std::to_string(10-frame_Type[2]/100),255, 234, 0,gRenderer);
+                        }
+                        if (frame_Type[2]==1000) {
+                            collist=true;
+                            frame_Type[2]=0;
+                        }
+                        if (resize==-30) {
+                            frame_Type[1]++;
+                            timer[1].Text(std::to_string(10-frame_Type[1]/100),165, 42, 42,gRenderer);
+                        }
+                        if (frame_Type[1]==1000) {frame_Type[1]=0; resize=0;}
 
+                        if (resize==10) {
+                            frame_Type[0]++;
+                            timer[0].Text(std::to_string(10-frame_Type[0]/100),255, 0, 0,gRenderer);
+                        }
+
+                        if (frame_Type[0]==1000) {frame_Type[0]=0; resize=0;}
 
 			}
 
@@ -369,6 +432,11 @@ bool Game:: LoadMedia() {
 	if (gJump == nullptr)
 	{
 		printf("Failed to load jumping sound%s\n", Mix_GetError());
+		success = false;
+	}
+	gEat = Mix_LoadWAV("sound/eat.wav");
+	if (gEat==nullptr){
+        printf("Failed to load eating sound%s\n", Mix_GetError());
 		success = false;
 	}
 
@@ -488,11 +556,30 @@ bool Game:: LoadMedia() {
 			Pipe_Below2.CreateTexture("Img/Pipe_Below.png", gRenderer);
 			Pipe_Above3.CreateTexture("Img/Pipe_Above.png", gRenderer);
 			Pipe_Below3.CreateTexture("Img/Pipe_Below.png", gRenderer);
+			Fruit.CreateTexture("Img/food.png",gRenderer);
+            for (int i=0; i<TOTAL_FOOD; i++){
+                gFruitClips[i].x=100*i;
+                gFruitClips[i].y=0;
+                gFruitClips[i].w=100;
+                gFruitClips[i].h=100;
+            }
+			Boom.CreateTexture("Img/boom.png",gRenderer);
+            j=-1;
+			for (int i=0; i<BOOM_FRAME; i++){
+                gBoomClips[i].x=580*(i%2);
+                if(i%2==0) j++;
+                gBoomClips[i].y=160*j;
+                gBoomClips[i].w=580;
+                gBoomClips[i].h=160;
+			}
 			score.CreateFont("font/Number.ttf", 58);
-			gen.CreateFont("font/calibrib.ttf", 38);
+			death.CreateFont("font/calibrib.ttf", 38);
             gameover.CreateFont("font/PressStart2P.ttf",50);
             press.CreateFont("font/PressStart2P.ttf",25);
             high.CreateFont("font/calibrib.ttf", 38);
+            timer[2].CreateFont("font/calibrib.ttf",42);
+            timer[1].CreateFont("font/calibrib.ttf",42);
+            timer[0].CreateFont("font/calibrib.ttf",42);
 		}
 	}
 	return success;
@@ -520,11 +607,14 @@ void Game::Close() {
 	gClick = nullptr;
 	gLose = nullptr;
 	gJump = nullptr;
+	gEat=nullptr;
 
 	score.CloseFont();
-	gen.CloseFont();
+	death.CloseFont();
 	gameover.CloseFont();
     press.CloseFont();
+    for (int i=0; i<3; i++)
+        timer[i].CloseFont();
 	SDL_DestroyRenderer(gRenderer);
 	gRenderer = nullptr;
 
@@ -535,24 +625,49 @@ void Game::Close() {
 	Mix_Quit();
 	SDL_Quit();
 }
+
+                    SDL_Rect de=  {560,90,50,50};
 void Game::Render(){
                     SDL_RenderClear(gRenderer);
 					RenderScrollingBackground(OffsetSpeed_Bkgr, g_BackgroundTexture, gRenderer);
-                    Pipe_Above1.PipeRender(gRenderer);
-                    Pipe_Below1.PipeRender(gRenderer);
-                    Pipe_Above2.PipeRender(gRenderer);
-                    Pipe_Below2.PipeRender(gRenderer);
-                    Pipe_Above3.PipeRender(gRenderer);
-                    Pipe_Below3.PipeRender(gRenderer);
+                    Pipe_Above1.Render(gRenderer);
+                    Pipe_Below1.Render(gRenderer);
+                    Pipe_Above2.Render(gRenderer);
+                    Pipe_Below2.Render(gRenderer);
+                    Pipe_Above3.Render(gRenderer);
+                    Pipe_Below3.Render(gRenderer);
+                    SDL_Rect* currentClip_Fruit = nullptr;
+                    currentClip_Fruit = &gFruitClips[type];
+                    Fruit.RenderFruit(gRenderer,currentClip_Fruit);
                     score.Render(gRenderer, 375 , 10);
-                    gen.Render(gRenderer, 10, 10);
+                    death.Render(gRenderer, 10, 10);
                     SDL_Rect* currentClip_Character = nullptr;
-                    currentClip_Character = &gCharacterClips[frame_Character];
+                    currentClip_Character = &gCharacterClips[frame_Character%14];
+                    if (frame_Type[2]!=0) p.RenderLight(gRenderer,&gCharacterClips[14]);
                     p.Render(gRenderer,currentClip_Character);
+
+
+                    SDL_RenderCopyEx(gRenderer,Boom.getTexture(),&gBoomClips[frame_Character/4],Boom.getDest(),-45,NULL,SDL_FLIP_NONE);
+
                     if(Die ==  true )
                     {
                         gameover.Render(gRenderer, 200, 200);
                         press.Render(gRenderer, 50, 300);
+                    }
+                    if (frame_Type[2]!=0) {
+                        timer[2].Render(gRenderer,570,50);
+                        de.x=560;
+                        SDL_RenderCopy(gRenderer,Fruit.getTexture(),&gFruitClips[2],&de);
+                    }
+                    if (frame_Type[1]!=0) {
+                        timer[1].Render(gRenderer,630,50);
+                        de.x=620;
+                        SDL_RenderCopy(gRenderer,Fruit.getTexture(),&gFruitClips[1],&de);
+                    }
+                    if (frame_Type[0]!=0) {
+                        timer[0].Render(gRenderer,690,50);
+                        de.x=680;
+                        SDL_RenderCopy(gRenderer,Fruit.getTexture(),&gFruitClips[0],&de);
                     }
                     high.Render(gRenderer, 550, 10);
 

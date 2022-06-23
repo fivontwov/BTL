@@ -27,7 +27,7 @@
 1646718892 e:\bình\codeblock\btl\ltexture.h
 	"Game_Base.h"
 
-1652258718 source:e:\bình\codeblock\btl\game_utils.cpp
+1652687339 source:e:\bình\codeblock\btl\game_utils.cpp
 	"Game_Utils.h"
 	"CollisionManager.h"
 	"Player.h"
@@ -36,7 +36,7 @@
 	"Background.h"
 	"TextManager.h"
 
-1652258078 e:\bình\codeblock\btl\game_base.h
+1652810200 e:\bình\codeblock\btl\game_base.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_mixer.h>
@@ -65,7 +65,7 @@
 	"Enemy.h"
 	<vector>
 
-1652259348 source:e:\bình\codeblock\btl\game.cpp
+1653365679 source:e:\bình\codeblock\btl\game.cpp
 	"Game.h"
 	"Game_Base.h"
 	"Game_Utils.h"
@@ -75,7 +75,6 @@
 	"Object.h"
 	"Background.h"
 	"TextManager.h"
-	"TextureManager.h"
 	"CollisionManager.h"
 	<vector>
 
@@ -85,14 +84,14 @@
 1652204573 source:e:\bình\codeblock\btl\ltexture.cpp
 	"LTexture.h"
 
-1652259085 source:e:\bình\codeblock\btl\background.cpp
+1652879793 source:e:\bình\codeblock\btl\background.cpp
 	"Background.h"
 	<cstdlib>
 
-1652259050 e:\bình\codeblock\btl\background.h
+1652878718 e:\bình\codeblock\btl\background.h
 	"Object.h"
 
-1652194369 e:\bình\codeblock\btl\object.h
+1652687323 e:\bình\codeblock\btl\object.h
 	"Game_Base.h"
 
 1650012977 e:\bình\codeblock\btl\texturemanager.h
@@ -106,14 +105,14 @@
 	<SDL.h>
 	<SDL_image.h>
 
-1652194104 source:e:\bình\codeblock\btl\object.cpp
+1652687145 source:e:\bình\codeblock\btl\object.cpp
 	"Object.h"
 
-1652197369 source:e:\bình\codeblock\btl\player.cpp
+1652810174 source:e:\bình\codeblock\btl\player.cpp
 	"Player.h"
 	<iostream>
 
-1652190222 e:\bình\codeblock\btl\player.h
+1652810174 e:\bình\codeblock\btl\player.h
 	"Object.h"
 
 1652015270 source:e:\bình\codeblock\btl\textmanager.cpp

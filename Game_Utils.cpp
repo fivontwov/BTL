@@ -147,7 +147,7 @@ void HandleInfoButton(SDL_Event* e,
 					BackButton.Render(currentClip_Back, gRenderer, gBackButtonTexture);
 
 					SDL_RenderPresent(gRenderer);
-				} while (SDL_PollEvent(e) != 0 && e->type == SDL_MOUSEBUTTONDOWN || e->type == SDL_MOUSEMOTION);
+				} while (SDL_PollEvent(e) != 0 && (e->type == SDL_MOUSEBUTTONDOWN || e->type == SDL_MOUSEMOTION));
 			}
 			break;
 		}

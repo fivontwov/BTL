@@ -14,6 +14,8 @@ private:
 	int incY1 = 0;
 	int incY2 = 0;
 	int incY3 = 0;
+	int incY_F= -100;
+	int incY_B= 0;
 	int accelerator=1;
 
 public:
@@ -23,7 +25,11 @@ public:
 	bool Pipe_Below2Update(int incY);
 	bool Pipe_Above3Update(int incY, int& score,int frame);
 	bool Pipe_Below3Update(int incY,int frame);
+	bool Update_Boom (int randX,int frame);
+	bool Fruit_Update(int incY_F,int &points,int frame,int type);
 	void Reset();
+	int FruitDistance1=600;
+	int BoomDistance=900;
 	int getPipe1X();
 	int getPipe1Y();
 	int getPipe2X();
@@ -31,9 +37,7 @@ public:
 	int getPipe3X();
 	int getPipe3Y();
 	void Render(SDL_Renderer* ren);
-	void GroundRender(SDL_Renderer* ren);
-	void LeaderboardRender(SDL_Renderer* ren);
-	void PipeRender(SDL_Renderer* ren);
+	void RenderFruit(SDL_Renderer* ren,SDL_Rect* currentClip);
 };
 
 #endif
